@@ -1,5 +1,6 @@
 package by.bsuir.constructioncompany.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,5 +23,6 @@ public class Builder {
     private Specialization specialization;
 
     @OneToMany(mappedBy = "builder")
+    @JsonIgnore
     private List<Task> tasks;
 }

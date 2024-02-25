@@ -56,7 +56,12 @@ public class Project {
     @JsonIgnore
     private List<WorkProject> workProjects;
 
-    @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
-    private Contract contract;
+    @Column(name = "contract_file")
+    @Lob
+    @JsonIgnore
+    private byte[] contractFile;
 
+    @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Review review;
 }
