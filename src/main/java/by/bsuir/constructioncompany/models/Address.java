@@ -34,4 +34,10 @@ public class Address {
     @OneToMany(mappedBy = "address")
     @JsonIgnore
     private List<Project> projects;
+
+    public Address(String city, String street, String numberHouse) {
+        this.city = city;
+        this.street = street;
+        this.numberHouse = numberHouse;
+    }
 }
