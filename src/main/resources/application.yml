@@ -12,3 +12,14 @@ spring:
         format_sql: true
     database: mysql
     open-in-view: false
+
+application:
+  security:
+    jwt:
+      secret-key: 5eekxbfUrc9marV/33k0yzgFxcuIHwIJyQ/IUd7HOMA=
+      access-token:
+        expiration: 86400000
+      refresh-token:
+        expiration: 604800000 # 7 days
+        remember-me-expiration:
+

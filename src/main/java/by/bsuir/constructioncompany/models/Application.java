@@ -12,7 +12,6 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Название заявки не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 

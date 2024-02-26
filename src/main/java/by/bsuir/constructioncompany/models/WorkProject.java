@@ -21,11 +21,9 @@ public class WorkProject {
     private Work work;
 
     @Column(name = "cost_old", nullable = false)
-    @NotNull(message = "Цена не может быть пустой")
     private int cost_old;
 
     @Column(name = "quantity", nullable = false)
-    @NotNull(message = "Объем работ не может быть пустым")
     private int quantity;
 
     @OneToOne(mappedBy = "workProject", fetch = FetchType.LAZY)

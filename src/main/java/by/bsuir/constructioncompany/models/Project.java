@@ -17,20 +17,16 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Название заказа не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name="date_of_creation", nullable = false)
-    @NotNull(message = "Дата создания заказа не может быть пустой")
     private LocalDateTime dateOfCreation;
 
     @Column(name="start_date")
-    @NotNull(message = "Дата начала работ не может быть пустой")
     private LocalDateTime startDate;
 
     @Column(name="end_date")
-    @NotNull(message = "Дата окончания работ не может быть пустой")
     private LocalDateTime endDate;
 
     @Column(name = "is_completed", nullable = false, columnDefinition="BOOLEAN DEFAULT false")

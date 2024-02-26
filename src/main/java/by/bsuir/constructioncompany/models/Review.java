@@ -16,10 +16,8 @@ public class Review {
     private Long id;
 
     @Column(name="date", nullable = false)
-    @NotNull(message = "Дата не может быть пустой")
     private LocalDateTime date;
 
-    @NotBlank(message = "Текст отзыва не может быть пустым")
     @Column(name = "text", nullable = false)
     private String text;
 

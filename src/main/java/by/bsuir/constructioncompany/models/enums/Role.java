@@ -1,8 +1,8 @@
 package by.bsuir.constructioncompany.models.enums;
 
 public enum Role {
-    USER,
-    ADMIN,
-    FOREMAN,
-    BUILDER
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_FOREMAN,
+    ROLE_BUILDER
 }

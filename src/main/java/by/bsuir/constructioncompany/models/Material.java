@@ -17,12 +17,10 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Название материала не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "cost", nullable = false)
-    @NotNull(message = "Цена не может быть пустой")
     private int cost;
 
     @Column(name = "is_available", nullable = false, columnDefinition="BOOLEAN DEFAULT true")

@@ -15,7 +15,6 @@ public class Specialization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Название специальности не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 

@@ -4,46 +4,52 @@ import by.bsuir.constructioncompany.models.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
+@Data
+@lombok.Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
-@Data
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Email не может быть пустым")
     @Column(name = "username", nullable = false, unique = true)
     @Size(min=5, max = 30, message = "Размер email должен быть от 5 до 30")
     private String username;
 
-    @NotBlank(message = "Пароль не может быть пустым")
     @Column(name = "password", nullable = false)
     @Size(min=5, max = 30, message = "Длина пароля должна быть от 5 до 30")
     @JsonIgnore
     private String password;
 
+    @lombok.Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'USER'")
-    private Role role = Role.USER;
+    @Column(name = "role", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'ROLE_USER'")
+    private Role role = Role.ROLE_USER;
 
-    @NotBlank(message = "Имя не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotBlank(message = "Фамилия не может быть пустой")
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @NotBlank(message = "Номер телефона не может быть пустым")
     @Column(name = "phone_number", nullable = false)
-    private String PhoneNumber;
+    @Pattern(regexp = "^\\+375-(?:17|25|29|33|44|55|99)-\\d{3}-\\d{2}-\\d{2}$", message = "Номер телефона должен быть вида +375-код-111-11-11")
+    private String phoneNumber;
 
+    @lombok.Builder.Default
     @Column(name = "is_blocked", nullable = false, columnDefinition="BOOLEAN DEFAULT false")
     private Boolean isBlocked = false;
 
@@ -66,4 +72,29 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Review> reviews;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isBlocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
