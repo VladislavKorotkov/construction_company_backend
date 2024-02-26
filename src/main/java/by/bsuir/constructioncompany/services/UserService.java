@@ -2,6 +2,7 @@ package by.bsuir.constructioncompany.services;
 
 import by.bsuir.constructioncompany.exceptions.UserAlreadyExistsException;
 import by.bsuir.constructioncompany.models.User;
+import by.bsuir.constructioncompany.models.enums.Role;
 import by.bsuir.constructioncompany.repositories.UserRepository;
 import by.bsuir.constructioncompany.requests.SignUpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
