@@ -20,4 +20,9 @@ public class AddressService {
         Optional<Address> addressOptional = addressRepository.findByCityAndStreetAndNumberHouse(city, street,numberHouse);
         return addressOptional.orElseGet(() -> addressRepository.save(new Address(city, street, numberHouse)));
     }
+    @Transactional
+    public Address createAddress(Address address){
+        Optional<Address> addressOptional = addressRepository.findByCityAndStreetAndNumberHouse(address.getCity(), address.getStreet(), address.getNumberHouse());
+        return addressOptional.orElseGet(() -> addressRepository.save(address));
+    }
 }

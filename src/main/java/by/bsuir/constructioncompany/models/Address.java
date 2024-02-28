@@ -3,13 +3,19 @@ package by.bsuir.constructioncompany.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "address")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +44,4 @@ public class Address {
         this.numberHouse = numberHouse;
     }
 
-    public Address() {
-
-    }
 }
