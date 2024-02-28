@@ -11,11 +11,13 @@ import by.bsuir.constructioncompany.responses.AuthenticationResponse;
 import by.bsuir.constructioncompany.responses.TokenValidationResponse;
 import by.bsuir.constructioncompany.security.JwtService;
 import by.bsuir.constructioncompany.security.TokenType;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import java.security.Principal;
+
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -31,6 +33,7 @@ public class AuthenticationService {
         this.jwtRefreshTokenRepository = jwtRefreshTokenRepository;
     }
 
+    @Transactional
     public AuthenticationResponse authenticate(SignInRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -41,7 +44,6 @@ public class AuthenticationService {
         User user = (User) authentication.getPrincipal();
         var jwtToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        revokeUserJwtRefreshToken(user);
         saveUserRefreshToken(user, refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -49,17 +51,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    private void revokeUserJwtRefreshToken(User user){
-        jwtRefreshTokenRepository.deleteIfExistsByUser(user);
-    }
-
-    private void saveUserRefreshToken(User user, String jwtToken) {
-        var token = JwtRefreshToken.builder()
-                .user(user)
-                .token(jwtToken)
-                .build();
-
-        jwtRefreshTokenRepository.save(token);
+    @Transactional
+    protected void saveUserRefreshToken(User user, String jwtToken) {
+        JwtRefreshToken jwtRefreshToken;
+        Optional<JwtRefreshToken> jwtRefreshTokenOptional = jwtRefreshTokenRepository.findByUser(user);
+        if(jwtRefreshTokenOptional.isPresent()){
+            jwtRefreshToken = jwtRefreshTokenOptional.get();
+            jwtRefreshToken.setToken(jwtToken);
+        }
+        else
+            jwtRefreshToken =  JwtRefreshToken.builder()
+                    .user(user)
+                    .token(jwtToken)
+                    .build();
+        jwtRefreshTokenRepository.save(jwtRefreshToken);
     }
 
     private User isValidTokenAndRetrieveUser(String refreshToken){
@@ -77,11 +82,18 @@ public class AuthenticationService {
         return user;
     }
 
+    private void isRefreshTokenRepresented(String refreshToken){
+        Optional<JwtRefreshToken> jwtRefreshTokenOptional = jwtRefreshTokenRepository.findByToken(refreshToken);
+        if(jwtRefreshTokenOptional.isEmpty())
+            throw new ObjectNotFoundException("Refresh token не валиден");
+    }
+
     public AuthenticationResponse refreshToken(
             RefreshJwtTokensRequest refreshJwtTokensRequest
     ){
         final String refreshToken = refreshJwtTokensRequest.getJwtRefreshToken();
         User user = isValidTokenAndRetrieveUser(refreshToken);
+        isRefreshTokenRepresented(refreshToken);
         String accessToken = jwtService.generateAccessToken(user);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)

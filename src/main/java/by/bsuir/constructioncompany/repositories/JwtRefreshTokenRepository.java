@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface JwtRefreshTokenRepository extends JpaRepository<JwtRefreshToken, Long> {
     void deleteIfExistsByUser(User user);
     Optional<JwtRefreshToken> findByToken(String token);
+    Optional<JwtRefreshToken> findByUser(User user);
 }

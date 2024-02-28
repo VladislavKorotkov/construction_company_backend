@@ -51,4 +51,9 @@ public class GlobalExceptionHandler{
     public ResponseEntity<String> handleCannotBeDeletedException(CannotBeDeletedException cannotBeDeletedException){
         return new ResponseEntity<>(cannotBeDeletedException.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException){
+        return new ResponseEntity<>(illegalArgumentException.getMessage(),  HttpStatus.BAD_REQUEST);
+    }
 }
