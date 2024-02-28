@@ -33,7 +33,9 @@ public class SecurityConfiguration {
     public static final String[] FOREMAN_LIST_URL = {
             "/api/auth/register-builder",
             "/api/specializations/**",
-            "/api/builders/**"
+            "/api/builders/**",
+            "/api/projects/foreman",
+            "/api/projects"
     };
 
 

@@ -37,4 +37,11 @@ public class ApplicationController {
         applicationService.createApplication(applicationRequest, authenticationService.getUserByPrincipal(principal));
         return ResponseEntity.ok("Заявка добавлена");
     }
+
+    @PostMapping("/accept/{id}")
+    @PreAuthorize("hasRole('FOREMAN')")
+    public ResponseEntity<String> acceptApplication(@PathVariable("id") Long id, Principal principal){
+        applicationService.acceptTheApplication(id, authenticationService.getUserByPrincipal(principal));
+        return ResponseEntity.ok("Заявка принята");
+    }
 }

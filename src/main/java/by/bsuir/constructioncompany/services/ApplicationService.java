@@ -1,5 +1,6 @@
 package by.bsuir.constructioncompany.services;
 
+import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
 import by.bsuir.constructioncompany.models.Address;
 import by.bsuir.constructioncompany.models.Application;
 import by.bsuir.constructioncompany.models.User;
@@ -16,11 +17,13 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final AddressService addressService;
     private final ModelMapper modelMapper;
+    private final ProjectService projectService;
 
-    public ApplicationService(ApplicationRepository applicationRepository, AddressService addressService, ModelMapper modelMapper) {
+    public ApplicationService(ApplicationRepository applicationRepository, AddressService addressService, ModelMapper modelMapper, ProjectService projectService) {
         this.applicationRepository = applicationRepository;
         this.addressService = addressService;
         this.modelMapper = modelMapper;
+        this.projectService = projectService;
     }
 
     @Transactional
@@ -44,5 +47,16 @@ public class ApplicationService {
 
     public List<Application> getApplicationsByUser(User user){
         return applicationRepository.getApplicationByUser(user);
+    }
+
+    public Application getApplicationById(Long id){
+        return applicationRepository.findById(id).orElseThrow(()->new ObjectNotFoundException("Заявка не найдена"));
+    }
+
+    @Transactional
+    public void acceptTheApplication(Long id, User foreman){
+        Application application = getApplicationById(id);
+        projectService.createProject(application, foreman);
+        applicationRepository.delete(application);
     }
 }
