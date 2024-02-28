@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class SignUpRequest {
+public class SignUpBuilderRequest {
     @NotBlank(message = "Email не может быть пустым")
     @Size(min=5, max = 30, message = "Размер email должен быть от 5 до 30")
     private String username;
@@ -27,5 +27,6 @@ public class SignUpRequest {
     @Pattern(regexp = "^\\+375-(?:17|25|29|33|44|55|99)-\\d{3}-\\d{2}-\\d{2}$", message = "Номер телефона должен быть вида +375-код-111-11-11")
     private String phoneNumber;
 
-    private Role role = Role.ROLE_USER;
+    @NotNull(message = "Id специальности не может быть пустым")
+    private Long specialization_id;
 }

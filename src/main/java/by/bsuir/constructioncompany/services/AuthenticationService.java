@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -107,6 +108,11 @@ public class AuthenticationService {
         return TokenValidationResponse.builder()
                 .isAccessTokenValid(true)
                 .build();
+    }
+
+    public User getUserByPrincipal(Principal principal){
+        String username = principal.getName();
+        return userRepository.findByUsername(username).orElseThrow(()-> new ObjectNotFoundException("Пользователь не найден"));
     }
 
 }

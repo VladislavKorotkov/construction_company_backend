@@ -20,8 +20,23 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration {
     public static final String[] WHITE_LIST_URL = {
-            "/api/auth/**"
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/refresh-token",
+            "/api/auth/is-access-token-valid"
     };
+    public static final String[] ADMIN_LIST_URL = {
+            "/api/auth/blocking-user/{id}",
+            "/api/auth/register-admin-foreman"
+    };
+
+    public static final String[] FOREMAN_LIST_URL = {
+            "/api/auth/register-builder",
+            "/api/specializations/**",
+            "/api/builders/**"
+    };
+
+
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final EmailAuthenticationProvider emailAuthenticationProvider;
 //    private final LogoutHandler logoutHandler;
@@ -32,6 +47,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
+                                .requestMatchers(FOREMAN_LIST_URL).hasAnyRole("FOREMAN", "ADMIN")
+                                .requestMatchers(ADMIN_LIST_URL).hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

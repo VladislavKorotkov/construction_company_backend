@@ -28,6 +28,7 @@ public class SpecializationService {
     @Transactional
     public void createSpecialization(SpecializationRequest specializationRequest){
         Specialization specialization = modelMapper.map(specializationRequest, Specialization.class);
+        specializationRepository.save(specialization);
     }
 
     @Transactional

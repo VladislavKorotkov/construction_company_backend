@@ -2,6 +2,7 @@ package by.bsuir.constructioncompany.utils;
 
 
 import by.bsuir.constructioncompany.exceptions.CannotBeDeletedException;
+import by.bsuir.constructioncompany.exceptions.ImpossibleToBlockTheUserException;
 import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
 import by.bsuir.constructioncompany.exceptions.UserAlreadyExistsException;
 import org.springframework.core.Ordered;
@@ -55,5 +56,10 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException){
         return new ResponseEntity<>(illegalArgumentException.getMessage(),  HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ImpossibleToBlockTheUserException.class)
+    public ResponseEntity<String> impossibleToBlockTheUserExceptionException(ImpossibleToBlockTheUserException impossibleToBlockTheUserException){
+        return new ResponseEntity<>(impossibleToBlockTheUserException.getMessage(),  HttpStatus.CONFLICT);
     }
 }
