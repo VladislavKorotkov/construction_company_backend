@@ -5,9 +5,10 @@ import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
 import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
 import by.bsuir.constructioncompany.responses.EstimateResponse;
-import by.bsuir.constructioncompany.security.ProjectSecurity;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,16 +74,20 @@ public class ProjectController {
         projectService.deleteMaterialEstimate(id, materialId);
         return ResponseEntity.ok("Материал удален");
     }
-
     @GetMapping("/{id}/estimate")
     @PreAuthorize("@projectSecurity.hasForemanOrUserAccess(#id, #principal)")
     public ResponseEntity<EstimateResponse> getEstimate(@PathVariable("id") Long id, Principal principal){
         return ResponseEntity.ok(projectService.getEstimate(id));
     }
-
-    @GetMapping("/{id}/estimate/xls")
+    @GetMapping("/{id}/estimate/xlsx")
     @PreAuthorize("@projectSecurity.hasForemanOrUserAccess(#id, #principal)")
-    public ResponseEntity<EstimateResponse> getEstimateXls(@PathVariable("id") Long id, Principal principal){
-        return ResponseEntity.ok(projectService.getEstimate(id));
+    public ResponseEntity<byte[]> getEstimateXls(@PathVariable("id") Long id, Principal principal){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "estimate.xlsx");
+        byte[] excelBytes = projectService.getEstimateXlsx(id);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelBytes);
     }
 }

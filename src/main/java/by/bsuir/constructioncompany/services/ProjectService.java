@@ -13,6 +13,7 @@ import by.bsuir.constructioncompany.responses.EstimateResponse;
 import by.bsuir.constructioncompany.responses.MaterialProjectResponse;
 import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.utils.CalculateTotalCost;
+import by.bsuir.constructioncompany.utils.EstimateToXlsx;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +100,12 @@ public class ProjectService {
     @Transactional
     public void deleteMaterialEstimate(Long projectId, Long materialId){
         Project project = getProjectById(projectId);
+        materialProjectService.deleteMaterialProject(project, materialId);
+    }
 
+    public byte[] getEstimateXlsx(Long projectId){
+        EstimateResponse estimateResponse = getEstimate(projectId);
+        return EstimateToXlsx.convertEstimateResponseToXlsx(estimateResponse);
     }
 
 }
