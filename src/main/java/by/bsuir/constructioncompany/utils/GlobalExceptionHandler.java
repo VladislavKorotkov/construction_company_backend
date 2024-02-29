@@ -1,10 +1,7 @@
 package by.bsuir.constructioncompany.utils;
 
 
-import by.bsuir.constructioncompany.exceptions.CannotBeDeletedException;
-import by.bsuir.constructioncompany.exceptions.ImpossibleToBlockTheUserException;
-import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
-import by.bsuir.constructioncompany.exceptions.UserAlreadyExistsException;
+import by.bsuir.constructioncompany.exceptions.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -61,5 +58,10 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(ImpossibleToBlockTheUserException.class)
     public ResponseEntity<String> impossibleToBlockTheUserExceptionException(ImpossibleToBlockTheUserException impossibleToBlockTheUserException){
         return new ResponseEntity<>(impossibleToBlockTheUserException.getMessage(),  HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(LackOfRightsException.class)
+    public ResponseEntity<String> handleLackOfRightsException(LackOfRightsException lackOfRightsException){
+        return new ResponseEntity<>(lackOfRightsException.getMessage(),  HttpStatus.CONFLICT);
     }
 }

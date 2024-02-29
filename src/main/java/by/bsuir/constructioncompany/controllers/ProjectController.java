@@ -1,12 +1,16 @@
 package by.bsuir.constructioncompany.controllers;
 
 import by.bsuir.constructioncompany.models.Project;
+import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
+import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
+import by.bsuir.constructioncompany.requests.WorkProjectRequest;
+import by.bsuir.constructioncompany.responses.EstimateResponse;
+import by.bsuir.constructioncompany.security.ProjectSecurity;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -20,6 +24,7 @@ public class ProjectController {
     public ProjectController(ProjectService projectService, AuthenticationService authenticationService) {
         this.projectService = projectService;
         this.authenticationService = authenticationService;
+
     }
 
     @GetMapping("/foreman")
@@ -35,5 +40,49 @@ public class ProjectController {
     @GetMapping("/user")
     public ResponseEntity<List<Project>> getProjectsByUser(Principal principal){
         return ResponseEntity.ok(projectService.getAllProjectsByUser(authenticationService.getUserByPrincipal(principal)));
+    }
+
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    @PostMapping("/{id}/estimate")
+    public ResponseEntity<String> createEstimate(@RequestBody ProjectEstimateRequest projectEstimateRequest, @PathVariable("id") Long id, Principal principal){
+        projectService.createEstimate(id, projectEstimateRequest);
+        return ResponseEntity.ok("Смета составлена");
+    }
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    @PostMapping("/{id}/estimate/materials")
+    public ResponseEntity<String> createMaterialEstimate(@RequestBody MaterialProjectRequest materialProjectRequest, @PathVariable("id") Long id, Principal principal){
+        projectService.createMaterialEstimate(id, materialProjectRequest);
+        return ResponseEntity.ok("Материал добавлен в смету");
+    }
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    @PostMapping("/{id}/estimate/works")
+    public ResponseEntity<String> createWorksEstimate(@RequestBody WorkProjectRequest workProjectRequest, @PathVariable("id") Long id, Principal principal){
+        projectService.createWorkEstimate(id, workProjectRequest);
+        return ResponseEntity.ok("Услуга добавлена в смету");
+    }
+
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    @DeleteMapping("/{id}/estimate/works/{workId}")
+    public ResponseEntity<String> DeleteWorkEstimate(@PathVariable("id") Long id, @PathVariable("workId") Long workId, Principal principal){
+        projectService.deleteWorkEstimate(id, workId);
+        return ResponseEntity.ok("Услуга удалена");
+    }
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    @DeleteMapping("/{id}/estimate/materials/{materialId}")
+    public ResponseEntity<String> DeleteMaterialEstimate(@PathVariable("id") Long id, @PathVariable("materialId") Long materialId, Principal principal){
+        projectService.deleteMaterialEstimate(id, materialId);
+        return ResponseEntity.ok("Материал удален");
+    }
+
+    @GetMapping("/{id}/estimate")
+    @PreAuthorize("@projectSecurity.hasForemanOrUserAccess(#id, #principal)")
+    public ResponseEntity<EstimateResponse> getEstimate(@PathVariable("id") Long id, Principal principal){
+        return ResponseEntity.ok(projectService.getEstimate(id));
+    }
+
+    @GetMapping("/{id}/estimate/xls")
+    @PreAuthorize("@projectSecurity.hasForemanOrUserAccess(#id, #principal)")
+    public ResponseEntity<EstimateResponse> getEstimateXls(@PathVariable("id") Long id, Principal principal){
+        return ResponseEntity.ok(projectService.getEstimate(id));
     }
 }

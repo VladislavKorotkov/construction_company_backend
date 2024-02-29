@@ -1,12 +1,17 @@
 package by.bsuir.constructioncompany.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "work_project")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class WorkProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +26,7 @@ public class WorkProject {
     private Work work;
 
     @Column(name = "cost_old", nullable = false)
-    private int cost_old;
+    private int costOld;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
