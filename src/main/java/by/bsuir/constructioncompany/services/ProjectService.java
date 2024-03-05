@@ -14,6 +14,7 @@ import by.bsuir.constructioncompany.responses.MaterialProjectResponse;
 import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.utils.CalculateTotalCost;
 import by.bsuir.constructioncompany.utils.EstimateToXlsx;
+import by.bsuir.constructioncompany.utils.GenerateContract;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -108,4 +109,10 @@ public class ProjectService {
         return EstimateToXlsx.convertEstimateResponseToXlsx(estimateResponse);
     }
 
+    @Transactional
+    public void generateContract(Long projectId){
+
+        Project project = getProjectById(projectId);
+        GenerateContract.generate(project);
+    }
 }

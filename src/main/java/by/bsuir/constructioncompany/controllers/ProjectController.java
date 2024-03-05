@@ -90,4 +90,12 @@ public class ProjectController {
                 .headers(headers)
                 .body(excelBytes);
     }
+
+    @PostMapping("/{id}/generate-contract")
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    public ResponseEntity<String> generateConract(@PathVariable("id") Long id, Principal principal){
+        projectService.generateContract(id);
+        return ResponseEntity.ok("Отлично");
+
+    }
 }
