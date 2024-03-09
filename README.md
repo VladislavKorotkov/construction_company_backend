@@ -9,8 +9,5 @@
 - Docker
 
 ## Features
-- Product Management
-- Order Management
-- Viewing and filtering products
+- Tasks Management
 - Placing orders
-- Sales analysis
