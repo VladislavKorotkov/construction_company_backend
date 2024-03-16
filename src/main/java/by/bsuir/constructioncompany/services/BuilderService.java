@@ -1,6 +1,8 @@
 package by.bsuir.constructioncompany.services;
 
+import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
 import by.bsuir.constructioncompany.models.Builder;
+import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.repositories.BuilderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -26,5 +28,13 @@ public class BuilderService {
 
     public List<Builder> getBuildersBySpecialization(){
         return null;
+    }
+
+    public Builder getBuilder(long id){
+        return builderRepository.findById(id).orElseThrow(()-> new ObjectNotFoundException("Строитель не найден"));
+    }
+
+    public Builder getBuilder(User user){
+        return builderRepository.findBuilderByUser(user).orElseThrow(()-> new ObjectNotFoundException("Строитель не найден"));
     }
 }

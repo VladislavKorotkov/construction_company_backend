@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface WorkProjectRepository extends JpaRepository<WorkProject, Long> {
     List<WorkProject> findByProject(Project project);
     Optional<WorkProject> findByProjectAndId(Project project, Long id);
+    List<WorkProject> findByProjectAndTaskIsNull(Project project);
 }

@@ -41,6 +41,10 @@ public class SecurityConfiguration {
             "/api/works/**"
     };
 
+    public static final String[] BUILDER_LIST_URL = {
+            "/api/tasks/builder"
+    };
+
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final EmailAuthenticationProvider emailAuthenticationProvider;
@@ -54,6 +58,7 @@ public class SecurityConfiguration {
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers(FOREMAN_LIST_URL).hasAnyRole("FOREMAN", "ADMIN")
                                 .requestMatchers(ADMIN_LIST_URL).hasRole("ADMIN")
+                                .requestMatchers(BUILDER_LIST_URL).hasRole("BUILDER")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

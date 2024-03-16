@@ -66,4 +66,11 @@ public class WorkProjectService {
         WorkProject workProject = workProjectRepository.findByProjectAndId(project, id).orElseThrow(()->new ObjectNotFoundException("Услуга не найдена"));
         workProjectRepository.delete(workProject);
     }
+
+    public List<WorkProjectResponse> getFreeWorkProject(Project project){
+        return WorkProjectMapper.mapToResponseList(workProjectRepository.findByProjectAndTaskIsNull(project));
+    }
+    public WorkProject getWorkProject(long id){
+        return workProjectRepository.findById(id).orElseThrow(()->new ObjectNotFoundException("Работа не найден"));
+    }
 }

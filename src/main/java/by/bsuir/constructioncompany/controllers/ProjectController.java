@@ -6,6 +6,7 @@ import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
 import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
 import by.bsuir.constructioncompany.responses.EstimateResponse;
+import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
 import jakarta.validation.Valid;
@@ -23,13 +24,11 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final AuthenticationService authenticationService;
-
     public ProjectController(ProjectService projectService, AuthenticationService authenticationService) {
         this.projectService = projectService;
         this.authenticationService = authenticationService;
 
     }
-
     @GetMapping("/foreman")
     public ResponseEntity<List<Project>> getProjectsByForeman(Principal principal){
         return ResponseEntity.ok(projectService.getAllProjectsByForeman(authenticationService.getUserByPrincipal(principal)));
@@ -110,5 +109,10 @@ public class ProjectController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(contractFile);
+    }
+    @GetMapping("/{id}/works")
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    public ResponseEntity<List<WorkProjectResponse>> getFreeWorksForProject(@PathVariable("id") Long id, Principal principal){
+        return ResponseEntity.ok(projectService.getFreeWorkProjects(id));
     }
 }

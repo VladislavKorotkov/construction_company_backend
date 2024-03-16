@@ -134,4 +134,9 @@ public class ProjectService {
             throw new ContractHasBeenNotCreatedException("Договор еще не создан");
         return project.getContractFile();
     }
+
+    public List<WorkProjectResponse> getFreeWorkProjects(long id){
+        Project project = getProjectById(id);
+        return workProjectService.getFreeWorkProject(project);
+    }
 }
