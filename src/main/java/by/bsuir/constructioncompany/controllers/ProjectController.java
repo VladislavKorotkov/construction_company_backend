@@ -24,6 +24,7 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final AuthenticationService authenticationService;
+
     public ProjectController(ProjectService projectService, AuthenticationService authenticationService) {
         this.projectService = projectService;
         this.authenticationService = authenticationService;
@@ -114,5 +115,12 @@ public class ProjectController {
     @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
     public ResponseEntity<List<WorkProjectResponse>> getFreeWorksForProject(@PathVariable("id") Long id, Principal principal){
         return ResponseEntity.ok(projectService.getFreeWorkProjects(id));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
+    public ResponseEntity<String> updateStatusProject(@PathVariable("id") long id, Principal principal){
+        projectService.updateStatusProject(id);
+        return ResponseEntity.ok("Статус изменен");
     }
 }

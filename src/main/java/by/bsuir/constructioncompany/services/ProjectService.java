@@ -4,6 +4,8 @@ import by.bsuir.constructioncompany.exceptions.*;
 import by.bsuir.constructioncompany.models.Application;
 import by.bsuir.constructioncompany.models.Project;
 import by.bsuir.constructioncompany.models.User;
+import by.bsuir.constructioncompany.models.WorkProject;
+import by.bsuir.constructioncompany.models.enums.TaskStatus;
 import by.bsuir.constructioncompany.repositories.ProjectRepository;
 import by.bsuir.constructioncompany.requests.ContractRequest;
 import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
@@ -26,6 +28,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MaterialProjectService materialProjectService;
     private final WorkProjectService workProjectService;
+
 
     public ProjectService(ProjectRepository projectRepository, MaterialProjectService materialProjectService, WorkProjectService workProjectService) {
         this.projectRepository = projectRepository;
@@ -139,4 +142,22 @@ public class ProjectService {
         Project project = getProjectById(id);
         return workProjectService.getFreeWorkProject(project);
     }
+
+    @Transactional
+    public void updateStatusProject(long id){
+        Project project = getProjectById(id);
+        if(project.getIsCompleted())
+            throw new IncorrectDataException("Проект уже завершен");
+        List<WorkProject> workProjects = project.getWorkProjects();
+        workProjects.stream()
+                .filter(workProject -> workProject.getTask() != null && (workProject.getTask().getTaskStatus() != TaskStatus.COMPLETED))
+                .findFirst()
+                .ifPresent(workProject -> {
+                    throw new IncorrectDataException("Не все задачи еще завершены");
+                });
+        project.setIsCompleted(true);
+        projectRepository.save(project);
+    }
+
+
 }
