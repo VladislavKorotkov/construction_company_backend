@@ -1,12 +1,14 @@
 package by.bsuir.constructioncompany.controllers;
 
 import by.bsuir.constructioncompany.models.Project;
+import by.bsuir.constructioncompany.requests.ContractRequest;
 import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
 import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
 import by.bsuir.constructioncompany.responses.EstimateResponse;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -91,11 +93,22 @@ public class ProjectController {
                 .body(excelBytes);
     }
 
-    @PostMapping("/{id}/generate-contract")
+    @PostMapping("/{id}/contract")
     @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")
-    public ResponseEntity<String> generateConract(@PathVariable("id") Long id, Principal principal){
-        projectService.generateContract(id);
-        return ResponseEntity.ok("Отлично");
+    public ResponseEntity<String> generateContract(@PathVariable("id") Long id,@RequestBody @Valid ContractRequest contractRequest, Principal principal){
+        projectService.generateContract(id, contractRequest);
+        return ResponseEntity.ok("Договор составлен");
+    }
 
+    @GetMapping("/{id}/contract")
+    @PreAuthorize("@projectSecurity.hasForemanOrUserAccess(#id, #principal)")
+    public ResponseEntity<byte[]> generateContract(@PathVariable("id") Long id, Principal principal){
+        byte[] contractFile = projectService.getContract(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "contract.docx");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(contractFile);
     }
 }

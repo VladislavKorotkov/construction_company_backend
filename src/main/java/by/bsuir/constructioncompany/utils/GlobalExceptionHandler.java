@@ -64,4 +64,19 @@ public class GlobalExceptionHandler{
     public ResponseEntity<String> handleLackOfRightsException(LackOfRightsException lackOfRightsException){
         return new ResponseEntity<>(lackOfRightsException.getMessage(),  HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(EstimateEmptyException.class)
+    public ResponseEntity<String> handleEstimateEmptyException(EstimateEmptyException estimateEmptyException){
+        return new ResponseEntity<>(estimateEmptyException.getMessage(),  HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ContractHasBeenNotCreatedException.class)
+    public ResponseEntity<String> handleContractHasBeenNotCreatedException(ContractHasBeenNotCreatedException contractHasBeenNotCreatedException){
+        return new ResponseEntity<>(contractHasBeenNotCreatedException.getMessage(),  HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IncorrectDataException.class)
+    public ResponseEntity<String> handleIncorrectDataException(IncorrectDataException incorrectDataException){
+        return new ResponseEntity<>(incorrectDataException.getMessage(),  HttpStatus.CONFLICT);
+    }
 }

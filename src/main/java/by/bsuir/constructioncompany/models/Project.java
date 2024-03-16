@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class Project {
     private LocalDateTime dateOfCreation;
 
     @Column(name="start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name="end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "is_completed", nullable = false, columnDefinition="BOOLEAN DEFAULT false")
     @Builder.Default
@@ -59,7 +60,7 @@ public class Project {
     @JsonIgnore
     private List<WorkProject> workProjects;
 
-    @Column(name = "contract_file")
+    @Column(name = "contract_file", columnDefinition = "BLOB(50000)")
     @Lob
     @JsonIgnore
     private byte[] contractFile;

@@ -4,34 +4,36 @@ import by.bsuir.constructioncompany.models.Project;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GenerateContract {
-    public static void generate(Project project, int cost){
+    public static byte[] generate(Project project, int cost){
         try {
             FileInputStream templateFile = new FileInputStream("src/main/resources/contract_template.docx");
             XWPFDocument document = new XWPFDocument(templateFile);
             Map<String, String> replacementMap = getStringStringMap(project, cost);
             replaceText(document, replacementMap);
-            FileOutputStream out = new FileOutputStream("output.docx");
-            document.write(out);
-            out.close();
-            System.out.println("Документ успешно создан.");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            document.write(baos);
+            return baos.toByteArray();
+//            FileOutputStream out = new FileOutputStream("output.docx");
+//            document.write(out);
+//            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return new byte[0];
     }
 
     private static Map<String, String> getStringStringMap(Project project, int cost) {
         Map<String, String> replacementMap = new HashMap<>();
-        replacementMap.put("day", "1");
-        replacementMap.put("month", "2");
-        replacementMap.put("year", "2993");
+        replacementMap.put("day", String.valueOf(project.getStartDate().getDayOfMonth()));
+        replacementMap.put("month", String.valueOf(project.getStartDate().getMonthValue()));
+        replacementMap.put("year", String.valueOf(project.getStartDate().getYear()));
         replacementMap.put("surname", project.getUser().getSurname());
         replacementMap.put("name", project.getUser().getName());
         replacementMap.put("city", project.getAddress().getCity());

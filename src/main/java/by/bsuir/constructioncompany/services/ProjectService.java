@@ -1,11 +1,11 @@
 package by.bsuir.constructioncompany.services;
 
-import by.bsuir.constructioncompany.exceptions.LackOfRightsException;
-import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
+import by.bsuir.constructioncompany.exceptions.*;
 import by.bsuir.constructioncompany.models.Application;
 import by.bsuir.constructioncompany.models.Project;
 import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.repositories.ProjectRepository;
+import by.bsuir.constructioncompany.requests.ContractRequest;
 import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
 import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
@@ -115,9 +115,23 @@ public class ProjectService {
     }
 
     @Transactional
-    public void generateContract(Long projectId){
-
+    public void generateContract(Long projectId, ContractRequest contractRequest){
         Project project = getProjectById(projectId);
-        GenerateContract.generate(project, getTotalCost(projectId));
+        if(project.getWorkProjects().isEmpty()&&project.getMaterialProjects().isEmpty())
+            throw new EstimateEmptyException("The estimate is empty, add expenses");
+        if(contractRequest.getEndDate().isBefore(contractRequest.getStartDate()))
+            throw new IncorrectDataException("Дата завершение работ раньше чем дата начала");
+        project.setStartDate(contractRequest.getStartDate());
+        project.setEndDate(contractRequest.getEndDate());
+        byte[] contract = GenerateContract.generate(project, getTotalCost(projectId));
+        project.setContractFile(contract);
+        projectRepository.save(project);
+    }
+
+    public byte[] getContract(Long projectId){
+        Project project = getProjectById(projectId);
+        if(project.getContractFile()==null)
+            throw new ContractHasBeenNotCreatedException("Договор еще не создан");
+        return project.getContractFile();
     }
 }

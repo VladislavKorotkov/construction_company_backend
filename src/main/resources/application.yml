@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    date-format: dd-MM-yyyy
   datasource:
     url: jdbc:mysql://localhost:3306/construction_company
     username: root
@@ -12,6 +14,7 @@ spring:
         format_sql: true
     database: mysql
     open-in-view: false
+
 
 application:
   security:
