@@ -92,6 +92,11 @@ public class ProjectService {
                 .build();
     }
 
+    public int getTotalCost(Long id){
+        Project project = getProjectById(id);
+        return CalculateTotalCost.calculate(workProjectService.getWorkProjectResponses(project), materialProjectService.getMaterialProjectResponses(project));
+    }
+
     @Transactional
     public void deleteWorkEstimate(Long projectId, Long workId){
         Project project = getProjectById(projectId);
@@ -113,6 +118,6 @@ public class ProjectService {
     public void generateContract(Long projectId){
 
         Project project = getProjectById(projectId);
-        GenerateContract.generate(project);
+        GenerateContract.generate(project, getTotalCost(projectId));
     }
 }

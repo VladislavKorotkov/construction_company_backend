@@ -88,19 +88,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.aspose</groupId>
-			<artifactId>aspose-words</artifactId>
-			<version>20.1</version>
-			<type>pom</type>
+			<version>5.2.0</version>
 		</dependency>
 
 	</dependencies>

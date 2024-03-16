@@ -4,39 +4,59 @@ import by.bsuir.constructioncompany.models.Project;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.w3c.dom.Document;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import com.aspose.words.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GenerateContract {
-    public static void generate(Project project){
-        String templatePath = "src/main/resources/contract.docx";
-        String outputPath = "src/main/resources/contract2.docx";
+    public static void generate(Project project, int cost){
         try {
-            // Открытие шаблона docx
-//            Document document = new Document("template.docx");
-//
-//            // Создание объекта для замены переменных
-//            ReplaceOptions replaceOptions = new ReplaceOptions();
-//            replaceOptions.setMatchCase(false); // Установка регистронезависимости при замене
-//
-//            // Замена переменных в документе
-//            document.getRange().replace("{startDate.day}", "01", replaceOptions);
-//            document.getRange().replace("{startDate.month}", "января", replaceOptions);
-//            document.getRange().replace("{startDate.year}", "2024", replaceOptions);
-//            // Продолжайте заменять остальные переменные в документе
-//
-//            // Сохранение заполненного документа в новый файл
-//            document.save("filled_template.docx");
-//
-//            System.out.println("Шаблон успешно заполнен и сохранен.");
-        } catch (Exception e) {
+            FileInputStream templateFile = new FileInputStream("src/main/resources/contract_template.docx");
+            XWPFDocument document = new XWPFDocument(templateFile);
+            Map<String, String> replacementMap = getStringStringMap(project, cost);
+            replaceText(document, replacementMap);
+            FileOutputStream out = new FileOutputStream("output.docx");
+            document.write(out);
+            out.close();
+            System.out.println("Документ успешно создан.");
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static Map<String, String> getStringStringMap(Project project, int cost) {
+        Map<String, String> replacementMap = new HashMap<>();
+        replacementMap.put("day", "1");
+        replacementMap.put("month", "2");
+        replacementMap.put("year", "2993");
+        replacementMap.put("surname", project.getUser().getSurname());
+        replacementMap.put("name", project.getUser().getName());
+        replacementMap.put("city", project.getAddress().getCity());
+        replacementMap.put("street", project.getAddress().getStreet());
+        replacementMap.put("house", project.getAddress().getNumberHouse());
+        replacementMap.put("cost", String.valueOf(cost));
+        replacementMap.put("phone", project.getUser().getPhoneNumber());
+        return replacementMap;
+    }
+
+    private static void replaceText(XWPFDocument document, Map<String, String> replacementMap) {
+        for (XWPFParagraph paragraph : document.getParagraphs()) {
+            for (XWPFRun run : paragraph.getRuns()) {
+                String text = run.getText(0);
+                if (text != null) {
+                    for (Map.Entry<String, String> entry : replacementMap.entrySet()) {
+                        String findText = entry.getKey();
+                        String replaceText = entry.getValue();
+                        if (text.contains(findText)) {
+                            text = text.replace(findText, replaceText);
+                        }
+                    }
+                    run.setText(text, 0);
+                }
+            }
         }
     }
 
