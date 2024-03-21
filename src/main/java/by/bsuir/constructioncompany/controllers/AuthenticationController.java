@@ -26,7 +26,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://127.0.0.1:5500", methods = {RequestMethod.POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @Valid SignInRequest request
     ) {
@@ -34,7 +33,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://127.0.0.1:5500", methods = {RequestMethod.POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity<?> register(
             @RequestBody @Valid SignUpRequest request
     ) {
@@ -43,7 +41,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register-admin-foreman")
-    @CrossOrigin(origins = "http://127.0.0.1:5500", methods = {RequestMethod.POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity<?> registerAdminOrForeman(
             @RequestBody @Valid SignUpRequest request
     ) {
@@ -52,7 +49,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register-builder")
-    @CrossOrigin(origins = "http://127.0.0.1:5500", methods = {RequestMethod.POST}, allowedHeaders = {"Authorization", "Content-Type"})
     public ResponseEntity<?> registerBuilder(
             @RequestBody @Valid SignUpBuilderRequest signUpBuilderRequest
             ) {

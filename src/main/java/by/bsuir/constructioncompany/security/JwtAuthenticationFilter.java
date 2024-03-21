@@ -27,10 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-//        if (Arrays.stream(SecurityConfiguration.WHITE_LIST_URL).anyMatch(url -> request.getServletPath().contains(url))) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
         String jwtAccessToken = jwtService.extractAccessToken(request);
         if (jwtAccessToken == null) {
             filterChain.doFilter(request, response);
