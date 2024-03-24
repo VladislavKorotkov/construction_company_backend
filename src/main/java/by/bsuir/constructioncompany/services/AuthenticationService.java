@@ -11,6 +11,7 @@ import by.bsuir.constructioncompany.responses.AuthenticationResponse;
 import by.bsuir.constructioncompany.responses.TokenValidationResponse;
 import by.bsuir.constructioncompany.security.JwtService;
 import by.bsuir.constructioncompany.security.TokenType;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,16 +69,16 @@ public class AuthenticationService {
         jwtRefreshTokenRepository.save(jwtRefreshToken);
     }
 
-    private User isValidTokenAndRetrieveUser(String refreshToken){
-        if(refreshToken == null)
+    private User isValidTokenAndRetrieveUser(String token, TokenType tokenType){
+        if(token == null)
             throw new IllegalArgumentException("Недопустимый заголовок авторизации");
-        final String userEmail = jwtService.extractSubject(refreshToken);
+        final String userEmail = jwtService.extractSubject(token);
         if (userEmail == null) {
             throw new IllegalArgumentException("Неверный адрес электронной почты пользователя в токене");
         }
         User user = userRepository.findByUsername(userEmail)
                 .orElseThrow(() -> new ObjectNotFoundException("Токен содержит неверный email"));
-        if (!jwtService.isTokenValid(refreshToken, user, TokenType.REFRESH)) {
+        if (!jwtService.isTokenValid(token, user, tokenType)) {
             throw new IllegalArgumentException("Неверный токен");
         }
         return user;
@@ -93,7 +94,7 @@ public class AuthenticationService {
             RefreshJwtTokensRequest refreshJwtTokensRequest
     ){
         final String refreshToken = refreshJwtTokensRequest.getJwtRefreshToken();
-        User user = isValidTokenAndRetrieveUser(refreshToken);
+        User user = isValidTokenAndRetrieveUser(refreshToken, TokenType.REFRESH);
         isRefreshTokenRepresented(refreshToken);
         String accessToken = jwtService.generateAccessToken(user);
         return AuthenticationResponse.builder()
@@ -102,11 +103,16 @@ public class AuthenticationService {
                 .build();
     }
 
-    public TokenValidationResponse isAccessTokenValid(String authorizationHeader) {
-        String accessToken = jwtService.extractAccessToken(authorizationHeader);
-        isValidTokenAndRetrieveUser(accessToken);
+    public TokenValidationResponse  isAccessTokenValid(String accessToken) {
+        boolean isValid = true;
+        try{
+            isValidTokenAndRetrieveUser(accessToken, TokenType.ACCESS);
+        }
+        catch (IllegalArgumentException | ObjectNotFoundException | ExpiredJwtException e) {
+            isValid = false;
+        }
         return TokenValidationResponse.builder()
-                .isAccessTokenValid(true)
+                .isAccessTokenValid(isValid)
                 .build();
     }
 

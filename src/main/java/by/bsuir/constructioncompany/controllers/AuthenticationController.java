@@ -1,5 +1,6 @@
 package by.bsuir.constructioncompany.controllers;
 
+import by.bsuir.constructioncompany.models.Application;
 import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.requests.*;
 import by.bsuir.constructioncompany.responses.AuthenticationResponse;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,6 +26,8 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
         this.userService = userService;
     }
+
+    // TODO logout
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
@@ -56,24 +60,29 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<AuthenticationResponse> refreshToken(
             @RequestBody RefreshJwtTokensRequest request
     ){
         return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 
-    @GetMapping("/is-access-token-valid")
+    @PostMapping("/is-access-token-valid")
     public ResponseEntity<TokenValidationResponse> checkAccessTokenValid(
-            @RequestHeader("Authorization") String authorizationHeader
+            @RequestBody TokenValidationRequest tokenValidationRequest
     ){
-        return ResponseEntity.ok(authenticationService.isAccessTokenValid(authorizationHeader));
+        return ResponseEntity.ok(authenticationService.isAccessTokenValid(tokenValidationRequest.getToken()));
     }
 
     @PutMapping("/blocking-user/{id}")
     public ResponseEntity<String> blockingUser(@PathVariable("id") Long id, @RequestBody BlockingUserRequest blockingUserRequest,Principal principal){
         userService.blockingUser(id, blockingUserRequest, authenticationService.getUserByPrincipal(principal));
         return ResponseEntity.ok("Операция успешно выполнена");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getApplicationsByUser(Principal principal){
+        return ResponseEntity.ok(authenticationService.getUserByPrincipal(principal));
     }
 
 }

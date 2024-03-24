@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class AddressRequest {
+public class    AddressRequest {
     @NotBlank(message = "Название города не может быть пустым")
     private String city;
 
