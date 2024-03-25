@@ -37,7 +37,8 @@ public class ApplicationService {
     }
 
     @Transactional
-    public void deleteApplication(Application application){
+    public void deleteApplication(Long id){
+        Application application = getApplicationById(id);
         applicationRepository.delete(application);
     }
 

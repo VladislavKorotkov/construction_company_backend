@@ -1,10 +1,7 @@
 package by.bsuir.constructioncompany.services;
 
 import by.bsuir.constructioncompany.exceptions.*;
-import by.bsuir.constructioncompany.models.Application;
-import by.bsuir.constructioncompany.models.Project;
-import by.bsuir.constructioncompany.models.User;
-import by.bsuir.constructioncompany.models.WorkProject;
+import by.bsuir.constructioncompany.models.*;
 import by.bsuir.constructioncompany.models.enums.TaskStatus;
 import by.bsuir.constructioncompany.repositories.ProjectRepository;
 import by.bsuir.constructioncompany.requests.ContractRequest;
@@ -13,14 +10,17 @@ import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
 import by.bsuir.constructioncompany.responses.EstimateResponse;
 import by.bsuir.constructioncompany.responses.MaterialProjectResponse;
+import by.bsuir.constructioncompany.responses.ProjectResponse;
 import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.utils.CalculateTotalCost;
 import by.bsuir.constructioncompany.utils.EstimateToXlsx;
 import by.bsuir.constructioncompany.utils.GenerateContract;
+import by.bsuir.constructioncompany.utils.ProjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,6 +46,12 @@ public class ProjectService {
                 .foreman(foreman)
                 .build();
         projectRepository.save(project);
+    }
+
+    @Transactional
+    public ProjectResponse getProject(Long id){
+        Project project = getProjectById(id);
+        return ProjectMapper.mapToResponse(project, getTotalCost(project), getProjectTasks(project));
     }
 
     public List<Project> getAllProjects(){
@@ -100,6 +106,10 @@ public class ProjectService {
         return CalculateTotalCost.calculate(workProjectService.getWorkProjectResponses(project), materialProjectService.getMaterialProjectResponses(project));
     }
 
+    public int getTotalCost(Project project){
+        return CalculateTotalCost.calculate(workProjectService.getWorkProjectResponses(project), materialProjectService.getMaterialProjectResponses(project));
+    }
+
     @Transactional
     public void deleteWorkEstimate(Long projectId, Long workId){
         Project project = getProjectById(projectId);
@@ -141,6 +151,16 @@ public class ProjectService {
     public List<WorkProjectResponse> getFreeWorkProjects(long id){
         Project project = getProjectById(id);
         return workProjectService.getFreeWorkProject(project);
+    }
+
+    public List<Task> getProjectTasks(Project project){
+        List<Task> tasks = new ArrayList<>();
+        for (WorkProject workProject : project.getWorkProjects()) {
+            if (workProject.getTask() != null) {
+                tasks.add(workProject.getTask());
+            }
+        }
+        return tasks;
     }
 
     @Transactional

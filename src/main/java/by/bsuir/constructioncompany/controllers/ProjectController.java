@@ -6,6 +6,7 @@ import by.bsuir.constructioncompany.requests.MaterialProjectRequest;
 import by.bsuir.constructioncompany.requests.ProjectEstimateRequest;
 import by.bsuir.constructioncompany.requests.WorkProjectRequest;
 import by.bsuir.constructioncompany.responses.EstimateResponse;
+import by.bsuir.constructioncompany.responses.ProjectResponse;
 import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
@@ -43,6 +44,12 @@ public class ProjectController {
     @GetMapping("/user")
     public ResponseEntity<List<Project>> getProjectsByUser(Principal principal){
         return ResponseEntity.ok(projectService.getAllProjectsByUser(authenticationService.getUserByPrincipal(principal)));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@projectSecurity.hasUserOrAnyRoleAccessToProject(#id, #principal)")
+    public ResponseEntity<ProjectResponse> getProject(@PathVariable("id") Long id, Principal principal){
+        return ResponseEntity.ok(projectService.getProject(id));
     }
 
     @PreAuthorize("@projectSecurity.hasForemanAccess(#id, #principal)")

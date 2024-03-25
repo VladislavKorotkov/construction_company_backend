@@ -1,8 +1,11 @@
 package by.bsuir.constructioncompany.security;
 
+import by.bsuir.constructioncompany.models.Application;
 import by.bsuir.constructioncompany.models.Project;
 import by.bsuir.constructioncompany.models.Task;
 import by.bsuir.constructioncompany.models.User;
+import by.bsuir.constructioncompany.models.enums.Role;
+import by.bsuir.constructioncompany.services.ApplicationService;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.ProjectService;
 import by.bsuir.constructioncompany.services.TaskService;
@@ -15,11 +18,13 @@ public class ProjectSecurity {
     private final ProjectService projectService;
     private final AuthenticationService authenticationService;
     private final TaskService taskService;
+    private final ApplicationService applicationService;
 
-    public ProjectSecurity(ProjectService projectService, AuthenticationService authenticationService, TaskService taskService) {
+    public ProjectSecurity(ProjectService projectService, AuthenticationService authenticationService, TaskService taskService, ApplicationService applicationService) {
         this.projectService = projectService;
         this.authenticationService = authenticationService;
         this.taskService = taskService;
+        this.applicationService = applicationService;
     }
 
     public boolean hasForemanAccess(Long projectId, Principal principal) {
@@ -33,6 +38,26 @@ public class ProjectSecurity {
     public boolean hasBuilderAccess(Long taskId, Principal principal) {
         User builder = authenticationService.getUserByPrincipal(principal);
         return isBuilderOfTask(builder.getId(), taskId);
+    }
+
+    public boolean hasUserAccessToApplication(Long applicationId, Principal principal){
+        User user = authenticationService.getUserByPrincipal(principal);
+        return isUserOfApplication(user.getId(),applicationId);
+    }
+
+    private boolean isUserOfApplication(Long userId, Long id) {
+        Application application = applicationService.getApplicationById(id);
+        return application.getUser().getId().equals(userId);
+    }
+
+    public boolean hasUserOrAnyRoleAccessToProject(Long projectId, Principal principal){
+        User user = authenticationService.getUserByPrincipal(principal);
+        return isUserOrAnyRoleAccessToProject(user,projectId);
+    }
+
+    private boolean isUserOrAnyRoleAccessToProject(User user, Long id) {
+        Project project = projectService.getProjectById(id);
+        return project.getUser().getId().equals(user.getId()) || user.getRole()!= Role.ROLE_USER;
     }
 
     private boolean isBuilderOfTask(Long userId, Long id) {

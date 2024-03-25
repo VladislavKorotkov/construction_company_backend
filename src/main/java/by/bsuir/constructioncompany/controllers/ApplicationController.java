@@ -44,4 +44,11 @@ public class ApplicationController {
         applicationService.acceptTheApplication(id, authenticationService.getUserByPrincipal(principal));
         return ResponseEntity.ok("Заявка принята");
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@projectSecurity.hasUserAccessToApplication(#id, #principal)")
+    public ResponseEntity<String> deleteApplication(@PathVariable("id") Long id, Principal principal){
+        applicationService.deleteApplication(id);
+        return ResponseEntity.ok("Заявка удалена");
+    }
 }

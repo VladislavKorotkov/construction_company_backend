@@ -11,4 +11,6 @@ public class TaskResponse {
     private long id;
     private long workProjectId;
     private long projectId;
+    private String builderName;
+    private String name;
 }
