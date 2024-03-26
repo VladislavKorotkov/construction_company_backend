@@ -93,7 +93,7 @@ public class UserService {
         User user = getUserById(id);
         if(user.getId().equals(admin.getId()))
             throw new ImpossibleToBlockTheUserException("Невозможно заблокировать собственный аккаунт");
-        user.setIsBlocked(blockingUserRequest.getIsBlocked());
+        user.setIsBlocked(!user.getIsBlocked());
         userRepository.save(user);
     }
 }

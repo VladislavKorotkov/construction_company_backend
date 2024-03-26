@@ -5,8 +5,10 @@ import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.requests.*;
 import by.bsuir.constructioncompany.responses.AuthenticationResponse;
 import by.bsuir.constructioncompany.responses.TokenValidationResponse;
+import by.bsuir.constructioncompany.responses.UserResponse;
 import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.UserService;
+import by.bsuir.constructioncompany.utils.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,8 +83,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<User> getApplicationsByUser(Principal principal){
-        return ResponseEntity.ok(authenticationService.getUserByPrincipal(principal));
+    public ResponseEntity<UserResponse> getApplicationsByUser(Principal principal){
+        return ResponseEntity.ok(UserMapper.mapToResponse(authenticationService.getUserByPrincipal(principal)));
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponse>> getUsers(){
+        return ResponseEntity.ok(authenticationService.getUsers());
+    }
+
 
 }

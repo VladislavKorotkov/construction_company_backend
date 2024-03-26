@@ -9,8 +9,10 @@ import by.bsuir.constructioncompany.requests.RefreshJwtTokensRequest;
 import by.bsuir.constructioncompany.requests.SignInRequest;
 import by.bsuir.constructioncompany.responses.AuthenticationResponse;
 import by.bsuir.constructioncompany.responses.TokenValidationResponse;
+import by.bsuir.constructioncompany.responses.UserResponse;
 import by.bsuir.constructioncompany.security.JwtService;
 import by.bsuir.constructioncompany.security.TokenType;
+import by.bsuir.constructioncompany.utils.UserMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -119,6 +122,10 @@ public class AuthenticationService {
     public User getUserByPrincipal(Principal principal){
         String username = principal.getName();
         return userRepository.findByUsername(username).orElseThrow(()-> new ObjectNotFoundException("Пользователь не найден"));
+    }
+
+    public List<UserResponse> getUsers(){
+        return UserMapper.mapToResponseList(userRepository.findAll());
     }
 
 }

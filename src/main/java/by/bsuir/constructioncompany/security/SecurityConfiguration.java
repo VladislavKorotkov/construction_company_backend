@@ -26,8 +26,9 @@ public class SecurityConfiguration {
             "/api/auth/is-access-token-valid"
     };
     public static final String[] ADMIN_LIST_URL = {
-            "/api/auth/blocking-user/{id}",
-            "/api/auth/register-admin-foreman"
+            "/api/auth/blocking-user/**",
+            "/api/auth/register-admin-foreman",
+            "/api/auth/users"
     };
 
     public static final String[] FOREMAN_LIST_URL = {
