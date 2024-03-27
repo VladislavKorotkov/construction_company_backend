@@ -77,8 +77,8 @@ public class AuthenticationController {
     }
 
     @PutMapping("/blocking-user/{id}")
-    public ResponseEntity<String> blockingUser(@PathVariable("id") Long id, @RequestBody BlockingUserRequest blockingUserRequest,Principal principal){
-        userService.blockingUser(id, blockingUserRequest, authenticationService.getUserByPrincipal(principal));
+    public ResponseEntity<String> blockingUser(@PathVariable("id") Long id,Principal principal){
+        userService.blockingUser(id, authenticationService.getUserByPrincipal(principal));
         return ResponseEntity.ok("Операция успешно выполнена");
     }
 

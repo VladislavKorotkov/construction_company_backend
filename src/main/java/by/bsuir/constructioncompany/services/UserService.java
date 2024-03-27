@@ -8,7 +8,6 @@ import by.bsuir.constructioncompany.models.Specialization;
 import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.models.enums.Role;
 import by.bsuir.constructioncompany.repositories.UserRepository;
-import by.bsuir.constructioncompany.requests.BlockingUserRequest;
 import by.bsuir.constructioncompany.requests.SignUpBuilderRequest;
 import by.bsuir.constructioncompany.requests.SignUpRequest;
 import jakarta.transaction.Transactional;
@@ -89,7 +88,7 @@ public class UserService {
     }
 
     @Transactional
-    public void blockingUser(Long id, BlockingUserRequest blockingUserRequest, User admin){
+    public void blockingUser(Long id, User admin){
         User user = getUserById(id);
         if(user.getId().equals(admin.getId()))
             throw new ImpossibleToBlockTheUserException("Невозможно заблокировать собственный аккаунт");
