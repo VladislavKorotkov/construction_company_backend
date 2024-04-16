@@ -18,3 +18,4 @@
 ![image](https://github.com/VladislavKorotkov/construction_company_backend/assets/146270174/a6d3fba2-ec07-4524-9764-39987ecab8ed)
 ![image](https://github.com/VladislavKorotkov/construction_company_backend/assets/146270174/8a0769b4-de98-408c-b9ed-0c704192cc23)
 ![image](https://github.com/VladislavKorotkov/construction_company_backend/assets/146270174/68da02c4-61ef-418f-a7c9-e1ab24b3b573)
+![image](https://github.com/VladislavKorotkov/construction_company_backend/assets/146270174/0ef51aa8-3171-4f69-8df4-5c8a61bd9547)
