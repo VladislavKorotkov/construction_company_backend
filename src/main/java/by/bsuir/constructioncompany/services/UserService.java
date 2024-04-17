@@ -1,6 +1,7 @@
 package by.bsuir.constructioncompany.services;
 
 import by.bsuir.constructioncompany.exceptions.ImpossibleToBlockTheUserException;
+import by.bsuir.constructioncompany.exceptions.IncorrectDataException;
 import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
 import by.bsuir.constructioncompany.exceptions.UserAlreadyExistsException;
 import by.bsuir.constructioncompany.models.Builder;
@@ -46,36 +47,30 @@ public class UserService {
     }
 
     @Transactional
-    public void registerAdminOrForeman(SignUpRequest signUpRequest){
+    public void registerForAdmin(SignUpRequest signUpRequest){
         if(userRepository.existsByUsername(signUpRequest.getUsername()))
             throw new UserAlreadyExistsException("Пользователь уже зарегестрирован с данным email");
-        userRepository.save(
-                User.builder()
-                        .username(signUpRequest.getUsername())
-                        .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                        .name(signUpRequest.getName())
-                        .surname(signUpRequest.getSurname())
-                        .phoneNumber(signUpRequest.getPhoneNumber())
-                        .role(signUpRequest.getRole())
-                        .build()
-        );
+        User user = User.builder()
+                .username(signUpRequest.getUsername())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .name(signUpRequest.getName())
+                .surname(signUpRequest.getSurname())
+                .phoneNumber(signUpRequest.getPhoneNumber())
+                .role(signUpRequest.getRole())
+                .build();
+        userRepository.save(user);
+        if(signUpRequest.getRole().equals(Role.ROLE_BUILDER)){
+            if(signUpRequest.getSpecializationId()!=null){
+                registerBuilder(user, signUpRequest.getSpecializationId());
+            }
+            else throw new IncorrectDataException("Id специальности не может быть пустым");
+        }
+
     }
 
     @Transactional
-    public void registerBuilder(SignUpBuilderRequest signUpBuilderRequest){
-        if(userRepository.existsByUsername(signUpBuilderRequest.getUsername()))
-            throw new UserAlreadyExistsException("Пользователь уже зарегестрирован с данным email");
-        User user = userRepository.save(
-                User.builder()
-                        .username(signUpBuilderRequest.getUsername())
-                        .password(passwordEncoder.encode(signUpBuilderRequest.getPassword()))
-                        .name(signUpBuilderRequest.getName())
-                        .surname(signUpBuilderRequest.getSurname())
-                        .phoneNumber(signUpBuilderRequest.getPhoneNumber())
-                        .role(Role.ROLE_BUILDER)
-                        .build()
-        );
-        Specialization specialization = specializationService.getSpecializationById(signUpBuilderRequest.getSpecialization_id());
+    public void registerBuilder(User user, Long specializationId){
+        Specialization specialization = specializationService.getSpecializationById(specializationId);
         Builder builder = Builder.builder()
                 .user(user)
                 .specialization(specialization)

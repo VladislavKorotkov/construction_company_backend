@@ -10,6 +10,7 @@ import java.util.List;
 public class ProjectMapper {
     public static ProjectResponse mapToResponse(Project project, int cost, List<Task> tasks){
         return ProjectResponse.builder()
+                .id(project.getId())
                 .name(project.getName())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())

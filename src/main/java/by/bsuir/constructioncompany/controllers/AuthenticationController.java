@@ -46,19 +46,11 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/register-admin-foreman")
+    @PostMapping("/admin/register")
     public ResponseEntity<?> registerAdminOrForeman(
             @RequestBody @Valid SignUpRequest request
     ) {
-        userService.registerAdminOrForeman(request);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/register-builder")
-    public ResponseEntity<?> registerBuilder(
-            @RequestBody @Valid SignUpBuilderRequest signUpBuilderRequest
-            ) {
-        userService.registerBuilder(signUpBuilderRequest);
+        userService.registerForAdmin(request);
         return ResponseEntity.ok().build();
     }
 
@@ -91,6 +83,4 @@ public class AuthenticationController {
     public ResponseEntity<List<UserResponse>> getUsers(){
         return ResponseEntity.ok(authenticationService.getUsers());
     }
-
-
 }

@@ -23,12 +23,12 @@ public class SecurityConfiguration {
             "/api/auth/login",
             "/api/auth/register",
             "/api/auth/refresh-token",
-            "/api/auth/is-access-token-valid"
+            "/api/auth/is-access-token-valid",
     };
     public static final String[] ADMIN_LIST_URL = {
             "/api/auth/blocking-user/**",
-            "/api/auth/register-admin-foreman",
-            "/api/auth/users"
+            "/api/auth/users",
+            "/api/auth/admin/register"
     };
 
     public static final String[] FOREMAN_LIST_URL = {

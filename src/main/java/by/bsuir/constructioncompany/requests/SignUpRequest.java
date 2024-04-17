@@ -1,10 +1,7 @@
 package by.bsuir.constructioncompany.requests;
 
 import by.bsuir.constructioncompany.models.enums.Role;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -28,4 +25,6 @@ public class SignUpRequest {
     private String phoneNumber;
 
     private Role role = Role.ROLE_USER;
+
+    private Long specializationId;
 }
