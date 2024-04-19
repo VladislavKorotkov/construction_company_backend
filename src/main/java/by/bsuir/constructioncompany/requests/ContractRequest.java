@@ -13,10 +13,10 @@ import java.util.Date;
 @Data
 public class ContractRequest {
     @NotNull(message = "Начало работ не может быть пустым")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     @NotNull(message = "Завершение работ не может быть пустым")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }

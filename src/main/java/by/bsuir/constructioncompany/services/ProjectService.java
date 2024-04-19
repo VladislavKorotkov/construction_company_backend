@@ -80,12 +80,16 @@ public class ProjectService {
     @Transactional
     public void createMaterialEstimate(Long id, MaterialProjectRequest materialProjectRequest){
         Project project = getProjectById(id);
+        if(project.getIsCompleted())
+            throw new IncorrectDataException("Проект уже завершен");
         materialProjectService.createMaterialProject(materialProjectRequest, project);
     }
 
     @Transactional
     public void createWorkEstimate(Long id, WorkProjectRequest workProjectRequest){
         Project project = getProjectById(id);
+        if(project.getIsCompleted())
+            throw new IncorrectDataException("Проект уже завершен");
         workProjectService.createWorkProject(workProjectRequest, project);
     }
 

@@ -36,13 +36,16 @@ public class SecurityConfiguration {
             "/api/specializations/**",
             "/api/builders/**",
             "/api/projects/foreman",
-            "/api/projects",
             "/api/materials/**",
             "/api/works/**"
     };
 
     public static final String[] BUILDER_LIST_URL = {
-            "/api/tasks/builder"
+            "/api/tasks/builder",
+    };
+
+    public static final String[] BUILDER_FOREMAN_ADMIN_URL = {
+            "/api/projects",
     };
 
 
@@ -66,6 +69,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(FOREMAN_LIST_URL).hasAnyRole("FOREMAN", "ADMIN")
                                 .requestMatchers(ADMIN_LIST_URL).hasRole("ADMIN")
                                 .requestMatchers(BUILDER_LIST_URL).hasRole("BUILDER")
+                                .requestMatchers(BUILDER_FOREMAN_ADMIN_URL).hasAnyRole("FOREMAN", "ADMIN", "BUILDER")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

@@ -20,12 +20,12 @@ public class WorkController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Work>> getMaterials(){
+    public ResponseEntity<List<Work>> getWorks(){
         return ResponseEntity.ok(workService.getWorks());
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<Work>> getAvailableMaterials(){
+    public ResponseEntity<List<Work>> getAvailableWorks(){
         return ResponseEntity.ok(workService.getAvailableWorks());
     }
 

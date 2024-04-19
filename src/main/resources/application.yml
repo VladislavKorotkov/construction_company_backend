@@ -1,6 +1,6 @@
 spring:
   jackson:
-    date-format: dd-MM-yyyy
+    date-format: yyyy-MM-dd
   datasource:
     url: jdbc:mysql://localhost:3306/construction_company
     username: root
