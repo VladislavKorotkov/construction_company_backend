@@ -1,7 +1,5 @@
 package by.bsuir.constructioncompany.controllers;
 
-import by.bsuir.constructioncompany.models.Application;
-import by.bsuir.constructioncompany.models.User;
 import by.bsuir.constructioncompany.requests.*;
 import by.bsuir.constructioncompany.responses.AuthenticationResponse;
 import by.bsuir.constructioncompany.responses.TokenValidationResponse;
@@ -10,9 +8,7 @@ import by.bsuir.constructioncompany.services.AuthenticationService;
 import by.bsuir.constructioncompany.services.UserService;
 import by.bsuir.constructioncompany.utils.UserMapper;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

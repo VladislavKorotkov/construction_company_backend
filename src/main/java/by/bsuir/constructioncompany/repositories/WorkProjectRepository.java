@@ -2,7 +2,6 @@ package by.bsuir.constructioncompany.repositories;
 
 import by.bsuir.constructioncompany.models.Project;
 import by.bsuir.constructioncompany.models.WorkProject;
-import by.bsuir.constructioncompany.services.ProjectService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

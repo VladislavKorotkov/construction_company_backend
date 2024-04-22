@@ -4,7 +4,6 @@ import by.bsuir.constructioncompany.models.Work;
 import by.bsuir.constructioncompany.requests.WorkRequest;
 import by.bsuir.constructioncompany.services.WorkService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

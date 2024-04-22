@@ -1,15 +1,10 @@
 package by.bsuir.constructioncompany.controllers;
 
-import by.bsuir.constructioncompany.models.WorkProject;
-import by.bsuir.constructioncompany.requests.ContractRequest;
 import by.bsuir.constructioncompany.requests.TaskRequest;
 import by.bsuir.constructioncompany.requests.TaskStatusChangeRequest;
 import by.bsuir.constructioncompany.responses.TaskResponse;
-import by.bsuir.constructioncompany.responses.WorkProjectResponse;
 import by.bsuir.constructioncompany.services.AuthenticationService;
-import by.bsuir.constructioncompany.services.ProjectService;
 import by.bsuir.constructioncompany.services.TaskService;
-import by.bsuir.constructioncompany.services.WorkProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
