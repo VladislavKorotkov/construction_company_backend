@@ -24,6 +24,7 @@ public class SecurityConfiguration {
             "/api/auth/register",
             "/api/auth/refresh-token",
             "/api/auth/is-access-token-valid",
+            "/api/reviews/**"
     };
     public static final String[] ADMIN_LIST_URL = {
             "/api/auth/blocking-user/**",

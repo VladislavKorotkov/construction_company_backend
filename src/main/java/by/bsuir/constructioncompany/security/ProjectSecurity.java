@@ -33,7 +33,7 @@ public class ProjectSecurity {
     }
     public boolean hasForemanOrUserAccess(Long projectId, Principal principal){
         User user = authenticationService.getUserByPrincipal(principal);
-        return isUserHasAccessOfProject(user.getId(), projectId);
+        return isUserOrForemanHasAccessOfProject(user.getId(), projectId);
     }
     public boolean hasBuilderAccess(Long taskId, Principal principal) {
         User builder = authenticationService.getUserByPrincipal(principal);
@@ -48,6 +48,11 @@ public class ProjectSecurity {
     private boolean isUserOfApplication(Long userId, Long id) {
         Application application = applicationService.getApplicationById(id);
         return application.getUser().getId().equals(userId);
+    }
+
+    public boolean hasUserAccessToProject(Long applicationId, Principal principal){
+        User user = authenticationService.getUserByPrincipal(principal);
+        return isUserHasAccessOfProject(user.getId(),applicationId);
     }
 
     public boolean hasUserOrAnyRoleAccessToProject(Long projectId, Principal principal){
@@ -65,17 +70,19 @@ public class ProjectSecurity {
         return task.getBuilder().getUser().getId().equals(userId);
     }
 
-
-    private boolean isUserHasAccessOfProject(Long userId, Long projectId) {
+    private boolean isUserOrForemanHasAccessOfProject(Long userId, Long projectId) {
         Project project = projectService.getProjectById(projectId);
         return project.getForeman().getId().equals(userId) || project.getUser().getId().equals(userId);
     }
 
-
-
     private boolean isUserForemanOfProject(Long userId, Long projectId) {
         Project project = projectService.getProjectById(projectId);
         return project.getForeman().getId().equals(userId);
+    }
+
+    private boolean isUserHasAccessOfProject(Long userId, Long projectId) {
+        Project project = projectService.getProjectById(projectId);
+        return project.getUser().getId().equals(userId);
     }
 
 }
