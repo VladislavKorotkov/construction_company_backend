@@ -44,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReview(ReviewRequest reviewRequest, long projectId, User user) {
         Project project = projectService.getProjectById(projectId);
         Review review2 = project.getReview();
-        if(project.getReview()==null){
+            if(project.getReview()==null){
             if(project.getIsCompleted()){
                 Review review = Review.builder()
                         .text(reviewRequest.getMessage())
