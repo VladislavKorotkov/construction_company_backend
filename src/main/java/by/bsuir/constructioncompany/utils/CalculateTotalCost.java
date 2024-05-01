@@ -1,6 +1,5 @@
 package by.bsuir.constructioncompany.utils;
 
-import by.bsuir.constructioncompany.models.MaterialProject;
 import by.bsuir.constructioncompany.models.Project;
 import by.bsuir.constructioncompany.responses.MaterialProjectResponse;
 import by.bsuir.constructioncompany.responses.WorkProjectResponse;

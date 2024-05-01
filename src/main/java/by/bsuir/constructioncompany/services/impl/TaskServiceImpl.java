@@ -3,6 +3,7 @@ package by.bsuir.constructioncompany.services.impl;
 import by.bsuir.constructioncompany.exceptions.IncorrectDataException;
 import by.bsuir.constructioncompany.exceptions.ObjectNotFoundException;
 import by.bsuir.constructioncompany.models.*;
+import by.bsuir.constructioncompany.models.enums.TaskStatus;
 import by.bsuir.constructioncompany.repositories.TaskRepository;
 import by.bsuir.constructioncompany.requests.TaskRequest;
 import by.bsuir.constructioncompany.requests.TaskStatusChangeRequest;
@@ -16,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -65,7 +67,8 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public List<TaskResponse> getTasksBuilder(User user){
         List<Task> tasks = builderService.getBuilder(user).getTasks();
-        return TaskMapper.mapToResponseList(tasks);
+        List<Task> taskAvailable = tasks.stream().filter(task->task.getTaskStatus().equals(TaskStatus.PENDING)).collect(Collectors.toList());
+        return TaskMapper.mapToResponseList(taskAvailable);
     }
 
     @Transactional

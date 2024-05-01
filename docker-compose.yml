@@ -6,10 +6,10 @@ services:
     container_name: mysql-db
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=101212
+      - MYSQL_ROOT_PASSWORD=1012123
       - MYSQL_DATABASE=construction_company
     ports:
-      - '3306:3306'
+      - '3307:3306'
 
   construction_app:
     container_name: construction_company
@@ -19,7 +19,11 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/construction_company
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=101212
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      SPRING_APPLICATION_JSON: '{
+              "spring.datasource.url"  : "jdbc:mysql://mysql-db:3306/construction_company?useSSL=false&allowPublicKeyRetrieval=true",
+              "spring.datasource.username" : "root",
+              "spring.datasource.password" : "1012123",
+              "spring.jpa.hibernate.ddl-auto" : "update"
+            }'
+    depends_on:
+      - mysql-db
